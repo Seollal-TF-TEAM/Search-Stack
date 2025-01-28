@@ -11,12 +11,10 @@
 
 👥 팀명 : 설날에 집에 있는 사람들
 
-|<img src="https://avatars.githubusercontent.com/u/## Team
 |<img src="https://avatars.githubusercontent.com/u/74342019?v=4" width="150" height="150"/>|<img src="https://avatars.githubusercontent.com/u/71498489?v=4" width="150" height="150"/>|<img src="https://avatars.githubusercontent.com/u/55776421?v=4" width="150" height="150"/>|<img src="https://avatars.githubusercontent.com/u/82265395?v=4" width="150" height="150"/>|<img src="https://avatars.githubusercontent.com/u/107902336?v=4" width="150" height="150"/>|
 |:-:|:-:|:-:|:-:|:-:|
 |나원호<br/>[@CooolRyan](https://github.com/CooolRyan)|한정현<br/>[@letsgojh0810](https://github.com/letsgojh0810)|이슬기<br/>[@seulg2027](https://github.com/seulg2027)|구민지<br/>[@minjee83](https://github.com/minjee83)|김대연<br/>[@dyoun12](https://github.com/dyoun12)|
 
-<sub>[Table made by TIT](https://team-info-table.seondal.kr/)</sub>
 
 
 ## 2. Project intro & subject
