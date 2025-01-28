@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Sign In</title>
+  <title>Sign Up</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <style>
     .container {
@@ -12,16 +12,16 @@
     form {
       margin-top: 20px;
     }
-    .signup-link {
-      margin-top: 15px;
+    .login-link {
+      margin-top: 10px;
       text-align: center;
     }
   </style>
 </head>
 <body>
 <div class="container">
-  <h1 class="text-center">Sign In</h1>
-  <form action="/login" method="post">
+  <h1 class="text-center">Sign Up</h1>
+  <form action="/signup" method="post">
     <div class="form-group">
       <label for="username">Username:</label>
       <input type="text" id="username" name="username" class="form-control" required>
@@ -30,13 +30,16 @@
       <label for="password">Password:</label>
       <input type="password" id="password" name="password" class="form-control" required>
     </div>
-    <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
   </form>
 
-  <!-- Sign Up 버튼 -->
-  <div class="signup-link">
-    <p>Don't have an account?</p>
-    <a href="/signup" class="btn btn-success btn-block">Sign Up</a>
+  <!-- Sign In 버튼 -->
+  <div class="login-link">
+    <p>Already have an account? <a href="/login" class="btn btn-link">Sign In</a></p>
   </div>
 </div>
 

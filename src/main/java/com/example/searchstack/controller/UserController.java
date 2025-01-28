@@ -10,11 +10,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -43,8 +42,8 @@ public class UserController {
         return "index";
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody User request) {
+    @PostMapping("/signup")
+    public ResponseEntity<String> register(@ModelAttribute User request) {
         try {
             userService.registerUser(request.getUsername(), request.getEmail(), request.getPassword());
             return ResponseEntity.ok("User registered successfully");
@@ -54,29 +53,31 @@ public class UserController {
     }
 
     @PostMapping("/dologin")
-    public ResponseEntity<String> dologin(@RequestBody User request, HttpSession session) {
+    public ResponseEntity<String> dologin(@RequestParam String username,
+                                          @RequestParam String password) {
         try {
-            // Spring Security를 통한 인증
-            Authentication authentication;
-            authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(username, password)
             );
 
-            // 인증된 사용자 정보를 가져와서 세션에 저장
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            session.setAttribute("user", userDetails);
-
-            return ResponseEntity.ok("Login successful");
-        } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+            if (authentication.isAuthenticated()) {
+                return ResponseEntity.ok("Login successful");
+            } else {
+                return ResponseEntity.status(401).body("Invalid credentials");
+            }
+        } catch (AuthenticationException e) {
+            return ResponseEntity.status(401).body("Login failed: " + e.getMessage());
         }
     }
+
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpSession session) {
         session.invalidate(); // 세션 무효화 (로그아웃)
         return ResponseEntity.ok("Logged out successfully");
     }
+
+
 
 
 }

@@ -3,10 +3,16 @@ package com.example.searchstack.service;
 import com.example.searchstack.config.SpringConfig;
 import com.example.searchstack.domain.User;
 import com.example.searchstack.repository.UserRepository;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
+import javax.swing.*;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -14,19 +20,24 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
+
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username)
-                .map(user -> org.springframework.security.core.userdetails.User.builder()
-                        .username(user.getUsername())
-                        .password(user.getPassword()) // Bcrypt 암호화된 비밀번호
-                        .roles(user.getRole()) // role 사용
-                        .build()
-                ).orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+
+        // ✅ 사용자의 역할(Role) 추가 (기본적으로 "ROLE_USER" 부여)
+        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
+
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(),
+                user.getPassword(), // 🔥 비밀번호는 암호화된 상태여야 함
+                authorities
+        );
     }
 
     public User registerUser(String username, String email, String password) {
@@ -47,4 +58,9 @@ public class UserService implements UserDetailsService {
 
         return userRepository.save(user);
     }
+
+    public boolean checkPassword(String rawPassword, String encodedPassword) {
+        return SpringConfig.passwordEncoder().matches(rawPassword, encodedPassword);
+    }
+
 }

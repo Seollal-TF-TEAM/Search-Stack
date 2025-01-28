@@ -28,9 +28,11 @@ public class SpringConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .csrf(csrf -> csrf.disable()) // ✅ CSRF 보호 비활성화
                 .authorizeHttpRequests(auth -> auth
                         .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
-                        .requestMatchers("/login","/register","/doLogin","/logout", "/signup", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/login","/register","/doLogin","/logout", "/signup", "/css/**", "/js/**", "/images/**","/error").permitAll()
+                        .requestMatchers("/main").authenticated()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
