@@ -1,0 +1,8 @@
+filebeat.inputs:
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/test.log  # 호스트와 볼륨 마운트 된 log 폴더 내 모든 .log 확장자
+
+output.logstash:
+  hosts: ["logstash:5044"]
