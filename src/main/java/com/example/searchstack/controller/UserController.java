@@ -2,6 +2,7 @@ package com.example.searchstack.controller;
 
 
 import com.example.searchstack.domain.User;
+import com.example.searchstack.repository.UserRepository;
 import com.example.searchstack.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
@@ -15,12 +16,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.Optional;
 
 @Controller
 public class UserController {
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
+    private UserRepository userRepository;
 
     public UserController(UserService userService, AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
@@ -56,8 +59,14 @@ public class UserController {
     public ResponseEntity<String> dologin(@RequestParam String username,
                                           @RequestParam String password) {
         try {
+            Optional<User> user = userRepository.findByUsername(username);
+
+            System.out.println("🔍 입력된 패스워드: " + password);
+            System.out.println("🔍 DB에서 가져온 패스워드: " + user.toString());
+
+
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(username, password)
+                    new UsernamePasswordAuthenticationToken(username, password, Collections.emptyList())
             );
 
             if (authentication.isAuthenticated()) {

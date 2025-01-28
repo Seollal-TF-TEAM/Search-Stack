@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.swing.*;
@@ -19,10 +20,13 @@ import java.util.Optional;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder; // 🔥 Spring에서 주입받음
 
 
-    public UserService(UserRepository userRepository) {
+
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -47,7 +51,7 @@ public class UserService implements UserDetailsService {
         }
 
         // ✅ PasswordEncoder 직접 호출 (주입 제거)
-        String encodedPassword = SpringConfig.passwordEncoder().encode(password);
+        String encodedPassword = passwordEncoder.encode(password);
 
         // 새로운 사용자 저장
         User user = new User();
@@ -57,10 +61,6 @@ public class UserService implements UserDetailsService {
         user.setRole("USER"); // 기본 ROLE 설정
 
         return userRepository.save(user);
-    }
-
-    public boolean checkPassword(String rawPassword, String encodedPassword) {
-        return SpringConfig.passwordEncoder().matches(rawPassword, encodedPassword);
     }
 
 }
