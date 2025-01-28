@@ -65,17 +65,34 @@ services:
 
 
   # --- Fluentd ---
-  # fluentd:
-  #   image: fluent/fluentd:v1.8-debian-1
-  #   container_name: fluentd
-  #   ports:
-  #     - "24224:24224"
-  #     - "24224:24224/udp"
-  #   volumes:
-  #     - ./fluent.conf:/fluentd/etc/fluent.conf
-  #     - fluentd-buffer:/fluentd/buffer
-  #   networks:
-  #     - seol_net
+  fluentd:
+    image: fluent/fluentd:v0.12.16
+    container_name: fluentd
+    ports:
+      - "24224:24224"
+    volumes:
+      - ./elk/fluent.conf:/fluentd/etc/fluent.conf
+    depends_on:
+      - elasticsearch
+    networks:
+      - seol_net
+    
 
-# volumes:
-#   fluentd-buffer:
+  # --- mysql ---
+  mysql:
+    image: mysql:lts
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root # 루트 사용자 비밀번호
+      MYSQL_DATABASE: seol # 생성할 기본 DB 이름
+      MYSQL_USER: user # 추가할 사용자
+      MYSQL_PASSWORD: user # 사용자 비밀번호
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - seol_net
+
+volumes:
+  mysql-data:
