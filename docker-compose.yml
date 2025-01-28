@@ -72,6 +72,7 @@ services:
       - "24224:24224"
     volumes:
       - ./elk/fluent.conf:/fluentd/etc/fluent.conf
+      - /var/log:/var/log:ro  # 호스트의 로그 디렉토리를 마운트
     depends_on:
       - elasticsearch
     networks:
