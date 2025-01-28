@@ -1,24 +1,21 @@
 package com.example.searchstack.service;
 
+import com.example.searchstack.config.SpringConfig;
 import com.example.searchstack.domain.User;
 import com.example.searchstack.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
 public class UserService implements UserDetailsService {
 
-    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-
     }
 
     @Override
@@ -38,8 +35,8 @@ public class UserService implements UserDetailsService {
             throw new RuntimeException("Username already exists");
         }
 
-        // 비밀번호 암호화
-        String encodedPassword = passwordEncoder.encode(password);
+        // ✅ PasswordEncoder 직접 호출 (주입 제거)
+        String encodedPassword = SpringConfig.passwordEncoder().encode(password);
 
         // 새로운 사용자 저장
         User user = new User();
@@ -50,5 +47,4 @@ public class UserService implements UserDetailsService {
 
         return userRepository.save(user);
     }
-
 }
