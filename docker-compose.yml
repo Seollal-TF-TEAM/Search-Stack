@@ -57,7 +57,7 @@ services:
     container_name: filebeat
     volumes:
       - ./elk/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
-      - /var/log:/var/log:ro  # 호스트의 로그 디렉토리를 마운트
+      - ./var/log:/var/log:ro  # 호스트의 로그 디렉토리를 마운트
     depends_on:
       - logstash
     networks:
@@ -65,14 +65,19 @@ services:
 
 
   # --- Fluentd ---
+  # https://www.fluentd.org/guides/recipes/docker-logging
+
   fluentd:
-    image: fluent/fluentd:v0.12.16
+    # image: fluent/fluentd:v1.18-debian-1
+    build: 
+      context: ./dockerfile
+      dockerfile: fluentd.dockerfile
     container_name: fluentd
     ports:
       - "24224:24224"
     volumes:
       - ./elk/fluent.conf:/fluentd/etc/fluent.conf
-      - /var/log:/var/log:ro  # 호스트의 로그 디렉토리를 마운트
+      - ./var/log:/var/log  # 호스트의 로그 디렉토리를 마운트
     depends_on:
       - elasticsearch
     networks:
