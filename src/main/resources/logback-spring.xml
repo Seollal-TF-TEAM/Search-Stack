@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<configuration>
+<configuration scan="true" scanPeriod="30 seconds">
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n</pattern>
         </encoder>
     </appender>
 
-<!--    <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">-->
-<!--        <destination>localhost:5044</destination>-->
-<!--        <encoder class="net.logstash.logback.encoder.LogstashEncoder">-->
+    <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>localhost:5000</destination>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+        </encoder>
+    </appender>
 
-<!--        </encoder>-->
-<!--    </appender>-->
+    <logger name="org.springframework" level="DEBUG" />
+    <logger name="net.logstash" level="DEBUG" />
 
-    <root level="debug">
+    <root level="INFO">
         <appender-ref ref="STDOUT" />
-<!--        <appender-ref ref="LOGSTASH" />-->
+        <appender-ref ref="LOGSTASH" />
     </root>
 </configuration>

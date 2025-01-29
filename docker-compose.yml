@@ -27,13 +27,14 @@ services:
     container_name: logstash
     ports:
       - "5044:5044"
+      - "5000:5000/tcp"  # TCP 포트 추가
     environment:
       - "LS_JAVA_OPTS=-Xms256m -Xmx256m"
     volumes:
       # dev (filebeat 사용 시)
-      - ./elk/logstash_dev.conf:/usr/share/logstash/pipeline/logstash.conf
+      # - ./elk/logstash_dev.conf:/usr/share/logstash/pipeline/logstash.conf
       # prod (Spring AOP 사용 시)
-      # - ./elk/logstash_prod.conf:/usr/share/logstash/pipeline/logstash.conf
+      - ./elk/logstash_prod.conf:/usr/share/logstash/pipeline/logstash.conf
     depends_on:
       - elasticsearch
     networks:

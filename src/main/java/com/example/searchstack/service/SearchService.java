@@ -1,5 +1,6 @@
 package com.example.searchstack.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -7,12 +8,12 @@ import org.springframework.stereotype.Service;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+@Slf4j
 @Service
 public class SearchService {
-    private static final Logger logger = LoggerFactory.getLogger(SearchService.class);
 
     public void search(String query) {
-        logger.debug("Search query: {}", query);
+        log.debug("Search query: {}", query);
     }
 
     public void logToLogstash(String keyword) {
