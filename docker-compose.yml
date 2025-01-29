@@ -59,6 +59,8 @@ services:
   filebeat:
     image: docker.elastic.co/beats/filebeat:7.11.1
     container_name: filebeat
+    # 명령어 무시못하게 설정
+    # command: filebeat -e -strict.perms=false 
     volumes:
       - ./elk/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
       - ./var/log:/var/log:ro  # 호스트의 로그 디렉토리를 마운트
