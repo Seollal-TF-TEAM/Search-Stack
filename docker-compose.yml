@@ -31,9 +31,9 @@ services:
       - "LS_JAVA_OPTS=-Xms256m -Xmx256m"
     volumes:
       # dev (filebeat 사용 시)
-      # - ./elk/logstash_dev.conf:/usr/share/logstash/pipeline/logstash.conf
+      - ./elk/logstash_dev.conf:/usr/share/logstash/pipeline/logstash.conf
       # prod (Spring AOP 사용 시)
-      - ./elk/logstash_prod.conf:/usr/share/logstash/pipeline/logstash.conf
+      # - ./elk/logstash_prod.conf:/usr/share/logstash/pipeline/logstash.conf
     depends_on:
       - elasticsearch
     networks:
@@ -71,7 +71,6 @@ services:
   # https://www.fluentd.org/guides/recipes/docker-logging
 
   fluentd:
-    # image: fluent/fluentd:v1.18-debian-1
     build: 
       context: ./dockerfile
       dockerfile: fluentd.dockerfile
@@ -79,8 +78,11 @@ services:
     ports:
       - "24224:24224"
     volumes:
-      - ./elk/fluent.conf:/fluentd/etc/fluent.conf
-      - ./var/log:/var/log  # 호스트의 로그 디렉토리를 마운트
+      # dev (test.log 사용 시)
+      - ./elk/fluent.conf:/fluentd/etc/fluent_dev.conf
+      # prod (test.log 사용 시)
+      # - ./elk/fluent.conf:/fluentd/etc/fluent_prod.conf
+      - ./var/log:/var/log:ro  # 호스트의 로그 디렉토리를 마운트
     depends_on:
       - elasticsearch
     networks:
