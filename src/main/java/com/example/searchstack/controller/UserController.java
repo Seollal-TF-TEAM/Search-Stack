@@ -23,7 +23,6 @@ import java.util.Optional;
 public class UserController {
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
-    private UserRepository userRepository;
 
     public UserController(UserService userService, AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
@@ -32,7 +31,7 @@ public class UserController {
 
     @GetMapping("/login")
     public String login() {
-        return "user/signin";  // ✅ "templates/user/signin.html"을 찾아서 렌더링
+        return "user/signin";  //
     }
 
     @GetMapping("/signup")
@@ -55,16 +54,13 @@ public class UserController {
         }
     }
 
+    //Spring Security에서 UsernamePasswordAuthenticationToken를 사용하게 되면
+    //Service에서 UserDetailsService 호출 및 받아서 사용
+    //overflow 터지는거를 방지하기 위해 role 부여가 필요, emptyList를 추가
     @PostMapping("/dologin")
     public ResponseEntity<String> dologin(@RequestParam String username,
                                           @RequestParam String password) {
         try {
-            Optional<User> user = userRepository.findByUsername(username);
-
-            System.out.println("🔍 입력된 패스워드: " + password);
-            System.out.println("🔍 DB에서 가져온 패스워드: " + user.toString());
-
-
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(username, password, Collections.emptyList())
             );

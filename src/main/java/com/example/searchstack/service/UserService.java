@@ -20,7 +20,7 @@ import java.util.Optional;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder; // 🔥 Spring에서 주입받음
+    private final PasswordEncoder passwordEncoder; // Spring에서 주입받음
 
 
 
@@ -34,26 +34,23 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
-        // ✅ 사용자의 역할(Role) 추가 (기본적으로 "ROLE_USER" 부여)
+        // 사용자의 역할(Role) 추가 (기본적으로 "ROLE_USER" 부여)
         List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
 
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
-                user.getPassword(), // 🔥 비밀번호는 암호화된 상태여야 함
+                user.getPassword(), // 비밀번호는 암호화된 상태여야 함
                 authorities
         );
     }
 
     public User registerUser(String username, String email, String password) {
-        // 중복 검사 (username & email)
         if (userRepository.findByUsername(username).isPresent()) {
             throw new RuntimeException("Username already exists");
         }
 
-        // ✅ PasswordEncoder 직접 호출 (주입 제거)
         String encodedPassword = passwordEncoder.encode(password);
 
-        // 새로운 사용자 저장
         User user = new User();
         user.setUsername(username);
         user.setEmail(email);
