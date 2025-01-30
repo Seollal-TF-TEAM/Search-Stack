@@ -12,19 +12,40 @@
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
             <providers>
                 <timestamp />
+                <mdc /> <!-- MDC 값 포함 (sessionID)-->
                 <pattern>
                     <!-- 로그 레벨, 메시지, 스레드 등의 기본 정보 포함 -->
                     {
-                    "timestamp": "%d{yyyy-MM-dd HH:mm:ss.SSS}",
                     "level": "%level",
                     "thread": "%thread",
                     "logger": "%logger",
                     "message": "%message",
-                    "log_type": "sys"
+                    "log_type": "sys",
+                    "session_id": "%X{session_id}"
                     }
                 </pattern>
+            </providers>
+        </encoder>
+    </appender>
 
+    <!-- 시스템 로그용 (fluentd) -->
+    <appender name="FLUENTD_SYS" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>localhost:24224</destination>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp />
                 <mdc /> <!-- MDC 값 포함 (sessionID)-->
+                <pattern>
+                    <!-- 로그 레벨, 메시지, 스레드 등의 기본 정보 포함 -->
+                    {
+                    "level": "%level",
+                    "thread": "%thread",
+                    "logger": "%logger",
+                    "message": "%message",
+                    "log_type": "sys",
+                    "session_id": "%X{session_id}"
+                    }
+                </pattern>
             </providers>
         </encoder>
     </appender>
@@ -35,19 +56,39 @@
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
             <providers>
                 <timestamp />
+                <mdc /> <!-- MDC 값 포함 (sessionID)-->
                 <pattern>
                     <!-- 로그 레벨, 메시지, 스레드 등의 기본 정보 포함 -->
                     {
-                    "timestamp": "%d{yyyy-MM-dd HH:mm:ss.SSS}",
                     "level": "%level",
                     "thread": "%thread",
                     "logger": "%logger",
                     "message": "%message",
-                    "log_type": "user" <!-- user -->
+                    "log_type": "user",
+                    "session_id": "%X{session_id}"
                     }
                 </pattern>
+            </providers>
+        </encoder>
+    </appender>
 
-                <mdc />
+    <appender name="FLUENTD_USER" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>localhost:24225</destination>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp />
+                <mdc /> <!-- MDC 값 포함 (sessionID)-->
+                <pattern>
+                    <!-- 로그 레벨, 메시지, 스레드 등의 기본 정보 포함 -->
+                    {
+                    "level": "%level",
+                    "thread": "%thread",
+                    "logger": "%logger",
+                    "message": "%message",
+                    "log_type": "user",
+                    "session_id": "%X{session_id}"
+                    }
+                </pattern>
             </providers>
         </encoder>
     </appender>
@@ -58,39 +99,66 @@
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
             <providers>
                 <timestamp />
+                <mdc />
                 <pattern>
                     <!-- 로그 레벨, 메시지, 스레드 등의 기본 정보 포함 -->
                     {
-                    "timestamp": "%d{yyyy-MM-dd HH:mm:ss.SSS}",
                     "level": "%level",
                     "thread": "%thread",
                     "logger": "%logger",
                     "message": "%message",
-                    "log_type": "search"
+                    "log_type": "search",
+                    "session_id": "%X{session_id}"
                     }
                 </pattern>
+            </providers>
+        </encoder>
+    </appender>
 
+    <appender name="FLUENTD_SEARCH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>localhost:24226</destination>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp />
                 <mdc />
+                <pattern>
+                    <!-- 로그 레벨, 메시지, 스레드 등의 기본 정보 포함 -->
+                    {
+                    "level": "%level",
+                    "thread": "%thread",
+                    "logger": "%logger",
+                    "message": "%message",
+                    "log_type": "search",
+                    "session_id": "%X{session_id}"
+                    }
+                </pattern>
             </providers>
         </encoder>
     </appender>
 
     <logger name="org.springframework" level="INFO">
         <appender-ref ref="LOGSTASH_SYS" />
+        <appender-ref ref="FLUENTD_SYS" />
     </logger>
     <logger name="com.example.searchstack.controller.UserController" level="INFO">
-        <appender-ref ref="LOGSTASH_SYS" />
+        <appender-ref ref="LOGSTASH_USER" />
+        <appender-ref ref="FLUENTD_USER" />
     </logger>
     <logger name="com.example.searchstack.controller.SearchController" level="INFO">
         <appender-ref ref="LOGSTASH_SEARCH" />
+        <appender-ref ref="FLUENTD_SEARCH" />
     </logger>
 
     <root level="INFO">
         <appender-ref ref="LOGSTASH_SYS" />
+        <appender-ref ref="FLUENTD_SYS" />
         <appender-ref ref="LOGSTASH_USER" />
+        <appender-ref ref="FLUENTD_USER" />
         <appender-ref ref="LOGSTASH_SEARCH" />
+        <appender-ref ref="FLUENTD_SEARCH" />
     </root>
     <root level="WARN">
         <appender-ref ref="STDOUT" />
     </root>
+
 </configuration>
