@@ -39,3 +39,4 @@ out/
 
 ### test data ###
 var/log/fluentd
+docker-compose.dev.yml
