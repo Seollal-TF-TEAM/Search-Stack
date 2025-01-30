@@ -48,7 +48,7 @@
 
 ## 4. Architecture
 
-<img src="./img/architecture.png" width=900 />
+<img src="https://github.com/user-attachments/assets/d65bc631-851d-4cb5-99a5-adbb03b4b920" width=900 />
 
 ## 5. How to run
 
