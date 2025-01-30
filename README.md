@@ -225,3 +225,38 @@ tcp {
     `localhost:9200` 에서 `127.0.0.1:9200`, `elasticsearch:9200` 으로 변경해서 해결했다.
 
 
+## 7. Compare ElasticSearch-Logstash & ElasticSearch-Fluentd 
+
+Spring Boot 애플리케이션에서 **Logback**을 활용해 **Logstash와 Fluentd로 로그를 전송**하고, 이후 **Elasticsearch에 저장하는 두 가지 방법(E-L, E-F)**을 비교합니다.
+
+| 비교 항목 | **E-L (Elasticsearch - Logstash)** | **E-F (Elasticsearch - Fluentd)** |
+| --- | --- | --- |
+| **리소스 사용량** | 높음 (JVM 기반) | 낮음 (Go 기반) |
+| **성능 (속도)** | 비교적 느림 (무거운 필터링) | 빠름 (경량 설계) |
+| **필터링/변환 기능** | 강력함 (Grok, GeoIP, Mutate, JSON 필터) | 상대적으로 약함 (기본적인 변환 지원) |
+| **설정 난이도** | 비교적 어려움 (Logstash DSL 사용) | 쉬움 (YAML 기반 설정) |
+| **Elasticsearch 최적화** | ✅ 강력한 통합 기능 제공 | 🚫 기본적인 통합만 가능 |
+| **컨테이너/Kubernetes 환경** | 적합하지 않음 (무거움) | ✅ 컨테이너 환경에 최적화됨 |
+| **다양한 입력 지원** | ✅ 다양한 소스 지원 (Beats, Kafka, TCP 등) | ✅ 다양한 플러그인 활용 가능 |
+
+### ✅ 어떤 경우에 선택할까?
+
+#### **E-L (Elasticsearch - Logstash) 추천 경우**
+- ✅ **데이터 변환이 복잡한 경우** → Grok, Mutate, GeoIP 기능이 필요할 때  
+- ✅ **고급 Elasticsearch 기능을 활용할 경우**  
+- ✅ **Kafka, Beats 등 다양한 입력 소스를 다뤄야 하는 경우**  
+- ❌ **컨테이너 환경에서는 비효율적** (리소스 사용량 많음)  
+
+#### **E-F (Elasticsearch - Fluentd) 추천 경우**
+- ✅ **컨테이너/Kubernetes 기반 로그 수집** (경량 & 빠름)  
+- ✅ **간단한 로그 필터링과 데이터 변환**  
+- ✅ **빠르고 가벼운 로깅 시스템을 원할 때**  
+- ❌ **복잡한 데이터 변환이 필요할 경우 비효율적**  
+
+---
+
+### **📌 결론**
+- **Logstash (E-L)** → 강력한 데이터 변환 & 다양한 입력 소스 지원 (**무거움**)  
+- **Fluentd (E-F)** → 가볍고 빠르며 컨테이너 환경에 적합 (**간결한 설정**)  
+
+**어떤 아키텍처를 선택할지는 사용자의 요구사항과 환경에 따라 달라집니다.** 
