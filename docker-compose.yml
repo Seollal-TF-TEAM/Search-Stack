@@ -27,7 +27,9 @@ services:
     container_name: logstash
     ports:
       - "5044:5044"
-      - "5000:5000/tcp"  # TCP 포트 추가
+      - "5000:5000/tcp"  # TCP 포트 1 (시스템 로그)
+      - "5001:5001/tcp"  # TCP 포트 2 (user 로그)
+      - "5002:5002/tcp"  # TCP 포트 3 (search 로그)
     environment:
       - "LS_JAVA_OPTS=-Xms256m -Xmx256m"
     volumes:

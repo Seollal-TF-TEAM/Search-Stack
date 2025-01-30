@@ -6,22 +6,22 @@
         </encoder>
     </appender>
 
-    <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+    <!-- 시스템 로그용 -->
+    <appender name="LOGSTASH_SYS" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
         <destination>localhost:5000</destination>
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
             <providers>
                 <timestamp />
                 <pattern>
                     <!-- 로그 레벨, 메시지, 스레드 등의 기본 정보 포함 -->
-                    <pattern>
-                        {
-                        "timestamp": "%d{yyyy-MM-dd HH:mm:ss.SSS}",
-                        "level": "%level",
-                        "thread": "%thread",
-                        "logger": "%logger",
-                        "message": "%message"
-                        }
-                    </pattern>
+                    {
+                    "timestamp": "%d{yyyy-MM-dd HH:mm:ss.SSS}",
+                    "level": "%level",
+                    "thread": "%thread",
+                    "logger": "%logger",
+                    "message": "%message",
+                    "log_type": "sys"
+                    }
                 </pattern>
 
                 <mdc /> <!-- MDC 값 포함 (sessionID)-->
@@ -29,11 +29,68 @@
         </encoder>
     </appender>
 
-    <logger name="org.springframework" level="DEBUG" />
-    <logger name="net.logstash" level="DEBUG" />
+    <!-- user 로그용 -->
+    <appender name="LOGSTASH_USER" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>localhost:5001</destination>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp />
+                <pattern>
+                    <!-- 로그 레벨, 메시지, 스레드 등의 기본 정보 포함 -->
+                    {
+                    "timestamp": "%d{yyyy-MM-dd HH:mm:ss.SSS}",
+                    "level": "%level",
+                    "thread": "%thread",
+                    "logger": "%logger",
+                    "message": "%message",
+                    "log_type": "user" <!-- user -->
+                    }
+                </pattern>
+
+                <mdc />
+            </providers>
+        </encoder>
+    </appender>
+
+    <!-- search 로그용 -->
+    <appender name="LOGSTASH_SEARCH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>localhost:5002</destination>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp />
+                <pattern>
+                    <!-- 로그 레벨, 메시지, 스레드 등의 기본 정보 포함 -->
+                    {
+                    "timestamp": "%d{yyyy-MM-dd HH:mm:ss.SSS}",
+                    "level": "%level",
+                    "thread": "%thread",
+                    "logger": "%logger",
+                    "message": "%message",
+                    "log_type": "search"
+                    }
+                </pattern>
+
+                <mdc />
+            </providers>
+        </encoder>
+    </appender>
+
+    <logger name="org.springframework" level="INFO">
+        <appender-ref ref="LOGSTASH_SYS" />
+    </logger>
+    <logger name="com.example.searchstack.controller.UserController" level="INFO">
+        <appender-ref ref="LOGSTASH_SYS" />
+    </logger>
+    <logger name="com.example.searchstack.controller.SearchController" level="INFO">
+        <appender-ref ref="LOGSTASH_SEARCH" />
+    </logger>
 
     <root level="INFO">
+        <appender-ref ref="LOGSTASH_SYS" />
+        <appender-ref ref="LOGSTASH_USER" />
+        <appender-ref ref="LOGSTASH_SEARCH" />
+    </root>
+    <root level="WARN">
         <appender-ref ref="STDOUT" />
-        <appender-ref ref="LOGSTASH" />
     </root>
 </configuration>
