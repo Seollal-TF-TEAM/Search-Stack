@@ -1,5 +1,7 @@
 package com.example.searchstack.service;
 
+import com.example.searchstack.config.exception.ApiException;
+import com.example.searchstack.config.exception.ErrorCode;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
@@ -13,13 +15,10 @@ import java.net.Socket;
 public class SearchService {
 
     public void search(String query) {
+        if (query.isEmpty() || query == null) {
+            throw new ApiException(ErrorCode.BAD_REQUEST_ERROR);
+        }
         log.debug("Search query: {}", query);
     }
 
-    public void logRequest(HttpServletRequest request) {
-        String sessionId = request.getSession().getId();
-        MDC.put("session_id", sessionId);  // MDC에 저장
-
-        log.info("User action logged"); // 이후 로그에 자동 포함됨
-    }
 }

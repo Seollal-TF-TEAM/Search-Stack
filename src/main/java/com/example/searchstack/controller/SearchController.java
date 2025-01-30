@@ -35,9 +35,6 @@ public class SearchController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(new URI(redirectUrl));
 
-        if (query.isEmpty() || query == null) {
-            throw new ApiException(ErrorCode.BAD_REQUEST_ERROR);
-        }
         searchService.search(query);
 
         return new ResponseEntity<>(httpHeaders, HttpStatus.PERMANENT_REDIRECT);
