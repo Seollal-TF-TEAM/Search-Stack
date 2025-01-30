@@ -1,8 +1,10 @@
 package com.example.searchstack.service;
 
+import com.example.searchstack.config.exception.ApiException;
+import com.example.searchstack.config.exception.ErrorCode;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
 
 import java.io.PrintWriter;
@@ -13,16 +15,10 @@ import java.net.Socket;
 public class SearchService {
 
     public void search(String query) {
+        if (query.isEmpty() || query == null) {
+            throw new ApiException(ErrorCode.BAD_REQUEST_ERROR);
+        }
         log.debug("Search query: {}", query);
     }
 
-    public void logToLogstash(String keyword) {
-        String jsonLog = "{\"keyword\": " + keyword + "}";
-        try (Socket socket = new Socket("localhost", 5044);
-             PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {
-            out.println(jsonLog);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

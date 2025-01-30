@@ -28,15 +28,13 @@ public class SearchController {
     }
 
     @GetMapping("/new")
+
     public ResponseEntity<Object> newSearchEnter(@RequestParam @Validated String query) throws URISyntaxException {
         String redirectUrl = "http://localhost:8080/main?query=" + URLEncoder.encode(query, StandardCharsets.UTF_8);
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(new URI(redirectUrl));
 
-        if (query.isEmpty() || query == null) {
-            throw new ApiException(ErrorCode.BAD_REQUEST_ERROR);
-        }
         searchService.search(query);
 
         return new ResponseEntity<>(httpHeaders, HttpStatus.PERMANENT_REDIRECT);
