@@ -3,8 +3,15 @@
 
 ## 목차
 1. [Team](#1-team)
-2. [Project intro & subject](#2-project-intro--subject)
+2. [Project Intro & Subject](#2-project-intro--subject)
 3. [Stack and Tools](#3-stack-and-tools)
+4. [How to Run](#4-how-to-run)
+5. [Troubleshooting](#5-troubleshooting)
+   - [5-1. Fluent에서 Elasticsearch Output Plugin을 찾을 수 없는 오류](#5-1-fluent에서-elasticsearch-output-plugin을-찾을-수-없는-오류)
+   - [5-2. Elasticsearch 7.11.1과 Elasticsearch Client 8.17.1의 버전 차이 문제](#5-2-elasticsearch-7111과-elasticsearch-client-8171의-버전-차이-문제)
+   - [5-3. Fluentd Test.log 파일을 읽지 못하는 문제](#5-3-fluentd-testlog-파일을-읽지-못하는-문제)
+   - [5-4. Logstash 포트 설정 에러](#5-4-logstash-포트-설정-에러)
+   - [5-5. Logstash와 Elasticsearch 연결 실패 오류](#5-5-logstash와-elasticsearch-연결-실패-오류)
 
 
 ## 1. Team
@@ -23,7 +30,7 @@
 
 🩵 프로젝트 개요 : 본 프로젝트에서는 **웹 서비스의 검색 로그 및 사용자 로그 데이터를 자동으로 수집하고 저장하는 파이프라인을 구축**한다. Spring Boot의 Logback을 활용해 데이터를 전송하고, ELK, EFK에서 로그 데이터를 수집, 처리, 시각화한다. 이를 통해 로그 데이터를 자동으로 관리하여 시스템을 안정적으로 운영하는 방법을 실습한다.
 
-🤍 프로젝트 목표 : ELK와 EFK의 차이 이해하기, Spring Filter/Security 이해하기
+🤍 프로젝트 목표 : ELK와 EFK의 차이 이해하기, Spring Logback/Filter/Security 실습하기
 
 
 ## 3. Stack and Tools
@@ -190,7 +197,7 @@ tcp {
 }
 ```
 
-설정 파일에서 위와 같이 포트를 추가해서 해당 포트를 열어주어 해결
+✔️ 설정 파일에서 위와 같이 포트를 추가해서 해당 포트를 열어주어 해결
 
 
 ### 5-5. Logstash와 Elasticsearch 연결 실패 오류
