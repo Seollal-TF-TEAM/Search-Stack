@@ -18,7 +18,7 @@ public class SearchService {
         if (query.isEmpty() || query == null) {
             throw new ApiException(ErrorCode.BAD_REQUEST_ERROR);
         }
-        log.debug("Search query: {}", query);
+        log.warn("Search query: {}", query);
     }
 
 }
