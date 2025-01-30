@@ -5,13 +5,14 @@
 1. [Team](#1-team)
 2. [Project Intro & Subject](#2-project-intro--subject)
 3. [Stack and Tools](#3-stack-and-tools)
-4. [How to Run](#4-how-to-run)
-5. [Troubleshooting](#5-troubleshooting)
-   - [5-1. Fluent에서 Elasticsearch Output Plugin을 찾을 수 없는 오류](#5-1-fluent에서-elasticsearch-output-plugin을-찾을-수-없는-오류)
-   - [5-2. Elasticsearch 7.11.1과 Elasticsearch Client 8.17.1의 버전 차이 문제](#5-2-elasticsearch-7111과-elasticsearch-client-8171의-버전-차이-문제)
-   - [5-3. Fluentd Test.log 파일을 읽지 못하는 문제](#5-3-fluentd-testlog-파일을-읽지-못하는-문제)
-   - [5-4. Logstash 포트 설정 에러](#5-4-logstash-포트-설정-에러)
-   - [5-5. Logstash와 Elasticsearch 연결 실패 오류](#5-5-logstash와-elasticsearch-연결-실패-오류)
+4. [Architecture](#4-architecture)
+5. [How to Run](#5-how-to-run)
+6. [Troubleshooting](#6-troubleshooting)
+   - [6-1. Fluent에서 Elasticsearch Output Plugin을 찾을 수 없는 오류](#6-1-fluent에서-elasticsearch-output-plugin을-찾을-수-없는-오류)
+   - [6-2. Elasticsearch 7.11.1과 Elasticsearch Client 8.17.1의 버전 차이 문제](#6-2-elasticsearch-7111과-elasticsearch-client-8171의-버전-차이-문제)
+   - [6-3. Fluentd Test.log 파일을 읽지 못하는 문제](#6-3-fluentd-testlog-파일을-읽지-못하는-문제)
+   - [6-4. Logstash 포트 설정 에러](#6-4-logstash-포트-설정-에러)
+   - [6-5. Logstash와 Elasticsearch 연결 실패 오류](#6-5-logstash와-elasticsearch-연결-실패-오류)
 
 
 ## 1. Team
@@ -41,15 +42,20 @@
 | <img src="https://img.shields.io/badge/logstash-005571?style=for-the-badge&logo=logstash&logoColor=white">      | 데이터 수집 및 처리 도구      |
 | <img src="https://img.shields.io/badge/elasticsearch-005571?style=for-the-badge&logo=elasticsearch&logoColor=white">    | 데이터 검색 및 분석 엔진      |
 | <img src="https://img.shields.io/badge/kibana-005571?style=for-the-badge&logo=kibana&logoColor=white">        | 데이터 시각화 및 대시보드 도구 |
+| <img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white">        | user 정보를 저장하는 관계형데이터베이스  |
+| <img src="https://img.shields.io/badge/docker-2496ED?style=for-the-badge&logo=docker&logoColor=white">        | ELK, EFK, mysql을 컨테이너화해 실행시키는 가상화 플랫폼  |
 | <img src="https://img.shields.io/badge/spring boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">        | ELK 및 EFK로 로그 데이터를 전송하는 WAS 서버 구축 도구  |
 
+## 4. Architecture
 
-## 4. How to run
+<img src="./img/architecture.png" width=900 />
+
+## 5. How to run
 
 
-## 5. Troubleshooting
+## 6. Troubleshooting
 
-### 5-1. Fluent에서 elasticsearch output plugin을 찾을 수 없는 오류
+### 6-1. Fluent에서 elasticsearch output plugin을 찾을 수 없는 오류
 docker-compose 실행 중에 fluentd 컨테이너에서 다음과 같은 에러가 발생
 
 ```
@@ -98,7 +104,7 @@ CMD ["fluentd", "-c", "/fluentd/etc/fluent.conf", "-p", "/fluentd/plugins"]
 
 --- 
 
-### 5-2. elasticsearch 7.11.1 과 elasticsearch client 8.17.1의 버전 차이 문제
+### 6-2. elasticsearch 7.11.1 과 elasticsearch client 8.17.1의 버전 차이 문제
 
 elasticsearch 플러그인을 인식하지만 fluentd의 elasticsearch client의 버전 8.17.1과 elasticsearch image 버전 7.11.1 버전이 맞지 않아 fluentd 컨테이너가 종료되는 문제가 발생
 
@@ -126,7 +132,7 @@ USER fluent
 CMD ["fluentd", "-c", "/fluentd/etc/fluent.conf", "-p", "/fluentd/plugins"]
 ```
 
-### 5-3. fluentd test.log 파일을 읽지 못하는 문제
+### 6-3. fluentd test.log 파일을 읽지 못하는 문제
 컨테이너 내부 쉘 접속 후 파일 정보 확인
 
 ``` bash
@@ -167,7 +173,7 @@ drwxr-xr-x 3 fluent fluent 96 Jan 29 05:01 fluentd
 -rw-r--r-- 1 fluent fluent 308 Jan 29 05:25 test.log
 ```
 
-### 5-4. Logstash 포트 설정 에러
+### 6-4. Logstash 포트 설정 에러
 
 ```bash
 in net.logstash.logback.appender.LogstashTcpSocketAppender[LOGSTASH] - Log destination localhost/<unresolved>:5044: Waiting 29959ms before attempting reconnection.
@@ -200,7 +206,7 @@ tcp {
 ✔️ 설정 파일에서 위와 같이 포트를 추가해서 해당 포트를 열어주어 해결
 
 
-### 5-5. Logstash와 Elasticsearch 연결 실패 오류
+### 6-5. Logstash와 Elasticsearch 연결 실패 오류
 
 ![alt text](./img/error01.png)
 
