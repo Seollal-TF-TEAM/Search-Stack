@@ -29,6 +29,7 @@
 | <img src="https://img.shields.io/badge/logstash-005571?style=for-the-badge&logo=logstash&logoColor=white">      | 데이터 수집 및 처리 도구      |
 | <img src="https://img.shields.io/badge/elasticsearch-005571?style=for-the-badge&logo=elasticsearch&logoColor=white">    | 데이터 검색 및 분석 엔진      |
 | <img src="https://img.shields.io/badge/kibana-005571?style=for-the-badge&logo=kibana&logoColor=white">        | 데이터 시각화 및 대시보드 도구 |
+| <img src="https://img.shields.io/badge/spring boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">        | ELK 및 EFK로 로그 데이터를 전송하는 WAS 서버 구축 도구  |
 
 
 ## 4. How to run
@@ -36,7 +37,7 @@
 
 ## 5. Troubleshooting
 
-### Fluent에서 elasticsearch output plugin을 찾을 수 없는 오류
+### 5-1. Fluent에서 elasticsearch output plugin을 찾을 수 없는 오류
 docker-compose 실행 중에 fluentd 컨테이너에서 다음과 같은 에러가 발생
 
 ```
@@ -85,7 +86,7 @@ CMD ["fluentd", "-c", "/fluentd/etc/fluent.conf", "-p", "/fluentd/plugins"]
 
 --- 
 
-### elasticsearch 7.11.1 과 elasticsearch client 8.17.1의 버전 차이 문제
+### 5-2. elasticsearch 7.11.1 과 elasticsearch client 8.17.1의 버전 차이 문제
 
 elasticsearch 플러그인을 인식하지만 fluentd의 elasticsearch client의 버전 8.17.1과 elasticsearch image 버전 7.11.1 버전이 맞지 않아 fluentd 컨테이너가 종료되는 문제가 발생
 
@@ -113,7 +114,7 @@ USER fluent
 CMD ["fluentd", "-c", "/fluentd/etc/fluent.conf", "-p", "/fluentd/plugins"]
 ```
 
-### fluentd test.log 파일을 읽지 못하는 문제
+### 5-3. fluentd test.log 파일을 읽지 못하는 문제
 컨테이너 내부 쉘 접속 후 파일 정보 확인
 
 ``` bash
@@ -153,3 +154,56 @@ drwxr-xr-x 12 root root 4096 Sep 6 11:35 ..
 drwxr-xr-x 3 fluent fluent 96 Jan 29 05:01 fluentd 
 -rw-r--r-- 1 fluent fluent 308 Jan 29 05:25 test.log
 ```
+
+### 5-4. Logstash 포트 설정 에러
+
+```bash
+in net.logstash.logback.appender.LogstashTcpSocketAppender[LOGSTASH] - Log destination localhost/<unresolved>:5044: Waiting 29959ms before attempting reconnection.
+```
+
+✅ 원인을 찾아보니, localhost:5044 서버에서 응답이 없었다.
+
+```
+ ✘ iseulgi@iseulgiui-MacBookPro  ~  curl "http://localhost:5044"
+curl: (52) Empty reply from server
+```
+
+1. Docker Compose 설정 파일에서 tcp 포트를 추가
+
+```yml
+ports:
+- "5044:5044"
+- "5000:5000/tcp"  # TCP 포트 추가
+```
+
+2. logstash.conf 설정 파일에서 tcp 포트 추가
+
+```conf
+tcp {
+    port => 5000
+    codec => json_lines
+}
+```
+
+설정 파일에서 위와 같이 포트를 추가해서 해당 포트를 열어주어 해결
+
+
+### 5-5. Logstash와 Elasticsearch 연결 실패 오류
+
+![alt text](./img/error01.png)
+
+```bash
+"Elasticsearch Unreachable: [http://localhost:9200/][Manticore::SocketException] Connection refused (Connection refused)"
+```
+
+1. java  버전 변경
+    
+    Window로컬에서 8버전 사용 중이었어서, 17버전으로 환경설정을 업데이트해주었다.
+
+    그러나, Java 버전은 Docker 내부에 있는 JDK 를 사용하므로 로컬환경에 영향을 받지 않았다.
+    
+2. conf 파일 hosts 주소 변경
+    
+    `localhost:9200` 에서 `127.0.0.1:9200`, `elasticsearch:9200` 으로 변경해서 해결했다.
+
+
