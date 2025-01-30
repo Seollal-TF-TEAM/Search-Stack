@@ -28,6 +28,7 @@ public class SearchController {
     }
 
     @GetMapping("/new")
+
     public ResponseEntity<Object> newSearchEnter(@RequestParam @Validated String query) throws URISyntaxException {
         String redirectUrl = "http://localhost:8080/main?query=" + URLEncoder.encode(query, StandardCharsets.UTF_8);
 
