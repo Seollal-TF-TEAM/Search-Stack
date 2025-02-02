@@ -14,7 +14,7 @@
    - [5-5. 로그 생성 및 ElasticSearch 적재 확인](#5-5-로그-생성-및-elasticsearch-적재-확인)
 6. [Troubleshooting](#6-troubleshooting)
    - [6-1. Fluent에서 Elasticsearch Output Plugin을 찾을 수 없는 오류](#6-1-fluent에서-elasticsearch-output-plugin을-찾을-수-없는-오류)
-   - [6-2. Elasticsearch 7.11.1과 Elasticsearch Client 8.17.1의 버전 차이 문제](#6-2-elasticsearch-7111과-elasticsearch-client-8171의-버전-차이-문제)
+   - [6-2. Elasticsearch 7.11.1-과 Elasticsearch Client 8.17.1의 버전 차이 문제](#6-2-elasticsearch-7111과-elasticsearch-client-8171의-버전-차이-문제)
    - [6-3. Fluentd Test.log 파일을 읽지 못하는 문제](#6-3-fluentd-testlog-파일을-읽지-못하는-문제)
    - [6-4. Logstash 포트 설정 에러](#6-4-logstash-포트-설정-에러)
    - [6-5. Logstash와 Elasticsearch 연결 실패 오류](#6-5-logstash와-elasticsearch-연결-실패-오류)
