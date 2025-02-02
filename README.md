@@ -52,6 +52,43 @@
 
 ## 5. How to run
 
+### 5-1. env 파일 작성
+
+루트에 위치한 sample.env를 참고해 ``.env`` 파일을 작성한다.
+
+| 환경 변수 | 설명 |
+| -- | -- |
+| ``MYSQL_ROOT_PASSWORD`` | MySQL 데이터베이스의 ``root`` 사용자 비밀번호를 설정합니다. |
+| ``MYSQL_DATABASE`` | MySQL 컨테이너 내에서 생성할 기본 데이터베이스의 이름을 지정합니다. |
+| ``MYSQL_USER`` | MySQL 데이터베이스에 액세스할 사용자 이름을 지정합니다. |
+| ``MYSQL_PASSWORD`` | ``MYSQL_USER``에 해당하는 사용자의 비밀번호를 설정합니다. |
+
+### 5-2. docker 이미지 풀링 & 컨테이너 실행
+
+```bash
+docker-compose up
+```
+
+### 5-3. (optional) JDK 17 설치
+```bash
+sudo apt update
+
+sudo apt install openjdk-17-jdk
+
+java -version
+```
+
+### 5-4. Spring app 실행
+
+```bash
+java -jar build/libs/search-stack-[version].jar
+```
+
+### 5-5. 로그 생성 및 ElasticSearch 적재 확인
+``Localhost:8080`` 접속 후 회원가입, 로그인, 검색 등 사용자 요청을 보낸다.
+이후 ElasticSearch index를 확인해보면 다음과 같은 결과를 확인할 수 있다.
+
+![alt text](./img/es_indexs.png)
 
 ## 6. Troubleshooting
 
