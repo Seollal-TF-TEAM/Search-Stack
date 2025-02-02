@@ -10,4 +10,4 @@ touch /var/log/test_user.log
 chown fluent:fluent /var/log/test_user.log
 chmod 644 /var/log/test_user.log
 # Fluentd 실행
-exec fluentd -c /fluentd/etc/fluent.conf -p /fluentd/plugins
+# exec fluentd -c /fluentd/etc/fluent.conf -p /fluentd/plugins

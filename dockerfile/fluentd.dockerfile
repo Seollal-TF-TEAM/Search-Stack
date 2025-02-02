@@ -14,7 +14,7 @@ RUN chmod +x /entry.sh
 USER fluent
 
 # entrypoint 스크립트 실행
-ENTRYPOINT ["/entry.sh"]
+# ENTRYPOINT ["/entry.sh"]
 
 
-# CMD ["fluentd", "-c", "/fluentd/etc/fluent.conf", "-p", "/fluentd/plugins"]
+CMD ["fluentd", "-c", "/fluentd/etc/fluent.conf", "-p", "/fluentd/plugins"]
