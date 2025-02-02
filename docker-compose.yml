@@ -91,6 +91,8 @@ services:
   mysql:
     image: mysql:lts
     container_name: mysql
+    env_file:
+      - .env
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
@@ -100,6 +102,7 @@ services:
       - "3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
+      - ./elk/mysql.init.sql:/docker-entrypoint.initdb.d
     networks:
       - seol_net
 
