@@ -1,4 +1,4 @@
-package com.example.searchstack.aop;
+package com.example.searchstack.filter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
