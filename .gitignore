@@ -36,10 +36,11 @@ out/
 ### VS Code ###
 .vscode/
 
-
 ### test data ###
 var/log/fluentd
-docker-compose.dev.yml
 
 ### MAC ###
 .DS_Store
+
+### ENVIRONMENT ###
+.env
