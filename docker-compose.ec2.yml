@@ -1,0 +1,78 @@
+version: "3.8"
+
+# --- Container간 통신 ---
+networks:
+  seol_net:
+    driver: bridge
+
+services:
+  # --- ElasticSearch ---
+  # https://www.elastic.co/guide/en/elasticsearch/reference/7.5/docker.html
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.11.1
+    container_name: elasticsearch
+    ports:
+      - "9200:9200"
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - ./elk/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+    networks:
+      - seol_net
+
+  # --- Logstash ---
+  # https://www.elastic.co/guide/en/logstash/7.11/docker-config.html
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.11.1
+    container_name: logstash
+    ports:
+      - "5000:5000/tcp"  # TCP 포트 1 (시스템 로그)
+      - "5001:5001/tcp"  # TCP 포트 2 (user 로그)
+      - "5002:5002/tcp"  # TCP 포트 3 (search 로그)
+    environment:
+      - "LS_JAVA_OPTS=-Xms256m -Xmx256m"
+    volumes:
+      - ./elk/prod/logstash_prod.conf:/usr/share/logstash/pipeline/logstash.conf
+    depends_on:
+      - elasticsearch
+    networks:
+      - seol_net
+
+  # --- Fluentd ---
+  # https://www.fluentd.org/guides/recipes/docker-logging
+  fluentd:
+    build: 
+      context: ./dockerfile
+      dockerfile: fluentd.dockerfile
+    container_name: fluentd
+    ports:
+      - "24224:24224/tcp"
+    volumes:
+      - ./elk/prod/fluent_prod.conf:/fluentd/etc/fluent.conf
+      - ./var/log:/var/log:ro  # 호스트의 로그 디렉토리를 마운트
+    depends_on:
+      - elasticsearch
+    networks:
+      - seol_net
+    
+  # --- mysql ---
+  mysql:
+    image: mysql:lts
+    container_name: mysql
+    env_file:
+      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./elk/mysql.init.sql:/docker-entrypoint.initdb.d
+    networks:
+      - seol_net
+
+volumes:
+  mysql-data:
