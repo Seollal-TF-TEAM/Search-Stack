@@ -7,13 +7,18 @@
 3. [Stack and Tools](#3-stack-and-tools)
 4. [Architecture](#4-architecture)
 5. [How to Run](#5-how-to-run)
+   - [5-1. env 파일 작성](#5-1-env-파일-작성)
+   - [5-2. docker 이미지 풀링 & 컨테이너 실행](#5-2-docker-이미지-풀링--컨테이너-실행)
+   - [5-3. (optional) JDK 17 설치](#5-3-optional-jdk-17-설치)
+   - [5-4. Spring app 실행](#5-4-spring-app-실행)
+   - [5-5. 로그 생성 및 ElasticSearch 적재 확인](#5-5-로그-생성-및-elasticsearch-적재-확인)
 6. [Troubleshooting](#6-troubleshooting)
    - [6-1. Fluent에서 Elasticsearch Output Plugin을 찾을 수 없는 오류](#6-1-fluent에서-elasticsearch-output-plugin을-찾을-수-없는-오류)
    - [6-2. Elasticsearch 7.11.1과 Elasticsearch Client 8.17.1의 버전 차이 문제](#6-2-elasticsearch-7111과-elasticsearch-client-8171의-버전-차이-문제)
    - [6-3. Fluentd Test.log 파일을 읽지 못하는 문제](#6-3-fluentd-testlog-파일을-읽지-못하는-문제)
    - [6-4. Logstash 포트 설정 에러](#6-4-logstash-포트-설정-에러)
    - [6-5. Logstash와 Elasticsearch 연결 실패 오류](#6-5-logstash와-elasticsearch-연결-실패-오류)
-
+7. [Compare ElasticSearch-Logstash & ElasticSearch-Fluentd](#7-compare-elasticsearch-logstash--elasticsearch-fluentd)
 
 ## 1. Team
 
