@@ -27,13 +27,10 @@ services:
     container_name: logstash
     ports:
       - "5044:5044"
-      - "5000:5000/tcp"  # TCP 포트 1 (시스템 로그)
-      - "5001:5001/tcp"  # TCP 포트 2 (user 로그)
-      - "5002:5002/tcp"  # TCP 포트 3 (search 로그)
     environment:
       - "LS_JAVA_OPTS=-Xms256m -Xmx256m"
     volumes:
-      - ./elk/prod/logstash_prod.conf:/usr/share/logstash/pipeline/logstash.conf
+      - ./elk/dev/logstash_dev.conf:/usr/share/logstash/pipeline/logstash.conf
     depends_on:
       - elasticsearch
     networks:
@@ -68,10 +65,8 @@ services:
     networks:
       - seol_net
 
-
   # --- Fluentd ---
   # https://www.fluentd.org/guides/recipes/docker-logging
-
   fluentd:
     build: 
       context: ./dockerfile
@@ -80,8 +75,7 @@ services:
     ports:
       - "24224:24224/tcp"
     volumes:
-      - ./elk/prod/fluent_prod.conf:/fluentd/etc/fluent.conf
-      - ./var/log:/var/log:ro  # 호스트의 로그 디렉토리를 마운트
+      - ./elk/dev/fluent_dev.conf:/fluentd/etc/fluent.conf
     depends_on:
       - elasticsearch
     networks:
